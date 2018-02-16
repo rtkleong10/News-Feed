@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery'; // npm i jquery --save (do this in terminal to add first)
 import './styles.css';
-// Use that chrome extension
 
 var sources = [
 	{
@@ -135,7 +134,7 @@ class NewsFeed extends React.Component {
 			<div>
 				<header>
 					<div className="container">
-						<h1>News Reader</h1>
+						<h1>News Feed</h1>
 						<Filter sources={sources} currentSource={this.state.currentSource} onChangeSource={this.onChangeSource} onChangeCategory={this.onChangeCategory}/>
 					</div>
 				</header>
