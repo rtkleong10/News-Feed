@@ -258,7 +258,7 @@ class ArticleList extends React.Component {
 	fetchDataFromUrl(url) {
 		$.ajax({
 			type: "GET",
-			url: url,
+			url: "https://cors-anywhere.herokuapp.com/" + url,
 			dataType: "xml" ,
 
 			success: function(data) {
