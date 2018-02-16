@@ -1,0 +1,74 @@
+body {
+	margin: 0;
+	font-family: Avenir;
+	background: #eaeaea;
+}
+
+a {
+	color: #0099dd;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #0077bb;
+	text-decoration: none;
+}
+
+h1 {
+	font-size: 54px;
+	margin: 0;
+}
+
+header {
+	background: #0099dd;
+	padding: 20px 0px;
+	color: #fff;
+	margin-bottom: 10px;
+}
+
+section {
+	padding-bottom: 20px;
+}
+
+
+.article {
+	border-bottom: 1px #bbb solid;
+}
+
+.article:last-child {
+	border-bottom: none;
+}
+
+.container {
+	padding: 1em;
+}
+
+@media(min-width: 586px){
+	header, section {
+		display: grid;
+		grid-template-columns: 1fr minmax(auto, 60em) 1fr;
+	}
+
+	.container {
+		grid-column: 2;
+	}
+
+	.article-list {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.article {
+		padding: 1em;
+	}
+
+	.article:nth-child(odd) {
+		border-right: 1px #bbb solid;
+	}
+
+	/* Grabs second last child if it's also odd */
+
+	.article:nth-child(odd).article:nth-last-child(2) { 
+		border-bottom: none;
+	}
+}
