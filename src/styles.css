@@ -4,21 +4,6 @@ body {
 	background: #eaeaea;
 }
 
-a {
-	color: #0099dd;
-	text-decoration: none;
-}
-
-a:hover {
-	color: #0077bb;
-	text-decoration: none;
-}
-
-h1 {
-	font-size: 54px;
-	margin: 0;
-}
-
 header {
 	background: #0099dd;
 	padding: 20px 0px;
@@ -30,11 +15,28 @@ section {
 	padding-bottom: 20px;
 }
 
+/* For the webpage title */
+h1 {
+	font-size: 54px;
+	margin: 0;
+}
+
+/* For the article titles */
+a {
+	color: #0099dd;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #0077bb;
+	text-decoration: none;
+}
 
 .article {
 	border-bottom: 1px #bbb solid;
 }
 
+/* Adding the horizontal lines */
 .article:last-child {
 	border-bottom: none;
 }
@@ -43,6 +45,8 @@ section {
 	padding: 1em;
 }
 
+/* For screens larger than phones */
+/* More spacing on left & right & articles are broken into 2 columns */
 @media(min-width: 586px){
 	header, section {
 		display: grid;
@@ -62,12 +66,12 @@ section {
 		padding: 1em;
 	}
 
+	/* Adding the vertical lines */
 	.article:nth-child(odd) {
 		border-right: 1px #bbb solid;
 	}
 
 	/* Grabs second last child if it's also odd */
-
 	.article:nth-child(odd).article:nth-last-child(2) { 
 		border-bottom: none;
 	}

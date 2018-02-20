@@ -1,8 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import $ from 'jquery'; // npm i jquery --save (do this in terminal to add first)
+import $ from 'jquery';
 import './styles.css';
 
+// Currently supports The Straits Times & Channel New Asia
+
+// RSS feed format for the different sources //////////////////////////////////////////////////////////////////////////////////////
+
+
+// Variables //////////////////////////////////////////////////////////////////////////////////////
+
+// Format:
+// sources is an array of "source"s (object literal)
+// A source is an object literal which contains the properties sourceName (string) & categories (array)
+// categories is an array that contains "category"s (object literal)
+// A category is an object literal which contains the properties categoryName (string) & url (string) (link to the RSS feed)
 var sources = [
 	{
 		sourceName: "Straits Times",
@@ -80,7 +92,22 @@ var sources = [
 	}
 ];
 
+
+// Components /////////////////////////////////////////////////////////////////////////////////////
+
+// App Hierarchy
+// 	- NewsFeed (stateful)
+// 		- Filter (stateless)
+// 			- SourceFilter (stateless)
+// 			- CategoryFilter (stateless)
+// 		- ArticleList (stateful)
+// 			- Article (stateless)
+
+
+// NewsFeed contains the whole app
 class NewsFeed extends React.Component {
+	// State: currentSource & currentCategory contain the source & category currently selected respectively (object literals)
+	// By default its the first item which is the same default displayed by the select element
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -92,8 +119,12 @@ class NewsFeed extends React.Component {
 		this.onChangeCategory = this.onChangeCategory.bind(this);
 	}
 
+	// Event Handlers
+	// onChangeSource & onChangeCategory are event handlers which will be passed to the select element in SourceFilter & CategoryFilter respectively
+	// They take in the strings representing the source & category as that's the only information available to those components
+	// These functions will search the arrays of sources & categories to find the object literal matching the string & will update the state to them
+	// onChangeSource will also set the currentCategory to the first category for the newly selected source
 	onChangeSource(newSourceName) {
-
 		var sources = this.props.sources;
 
 		for(let source in sources) {
@@ -101,17 +132,18 @@ class NewsFeed extends React.Component {
 			let sourceName = sources[source].sourceName;
 
 			if(sourceName === newSourceName) {
+
 				this.setState({
 					currentSource: sources[source],
 					currentCategory: sources[source].categories[0]
 				});
+
 			}
 
 		}
 	}
 
 	onChangeCategory(newCategoryName) {
-
 		var categories = this.state.currentSource.categories;
 
 		for(let category in categories) {
@@ -119,6 +151,7 @@ class NewsFeed extends React.Component {
 			let categoryName = categories[category].categoryName;
 
 			if(categoryName === newCategoryName) {
+
 				this.setState({currentCategory: categories[category]});
 
 			}
@@ -126,6 +159,13 @@ class NewsFeed extends React.Component {
 		}
 	}
 
+	// Renders Filter & ArticleList
+	// Filter's attributes: sources, currentSource, onChangeSource (to pass to SourceFilter), onChangeCategory (to pass to CategoryFilter)
+	// ArticleList's attributes: url, currentSourceName (to pass to the article for it to know how to interpret the RSS feed)
+	
+	// Styling (refer to src/styles.css for more)
+	// header & section is used to separate the header (title & Filter) from the body (ArticleList)
+	// .container is used for containing the elements, so that they can be styled to be in the center with padding
 	render() {
 		var sources = this.props.sources;
 		var url = this.state.currentCategory.url;
@@ -148,25 +188,34 @@ class NewsFeed extends React.Component {
 	}
 }
 
+// Filter contains the select elements which act as filters (sourceFilter & categoryFilter)
 class Filter extends React.Component {
 
+	// Renders SourceFilter & CategoryFilter
+	// SourceFilter's attributes: sourceNames, onChangeSource
+	// CategoryFilter's attributes: categoryNames, onChangeCategory, currentSourceName (for the key for each option to distinguish between categories of the same name belonging to different sources)
 	render() {
+		// Generation of sourceNames & categoryNames arrays by iterating throught through the sources array
 		var sources = this.props.sources;
 		var sourceNames = [];
 		var categoryNames = [];
 
+		// Looking through each source
 		for(let source in sources) {
 
 			let sourceName = sources[source].sourceName;
 			sourceNames.push(sourceName);
 
+			// Loooking through each category of the currently selected source
 			if(sourceName === this.props.currentSource.sourceName) {
 
 				let categories = sources[source].categories;
 
 				for(let category in categories) {
+
 					let categoryName = categories[category].categoryName;
 					categoryNames.push(categoryName);
+
 				}
 
 			}
@@ -182,23 +231,30 @@ class Filter extends React.Component {
 	}
 }
 
+// SourceFilter is used to select the source
 class SourceFilter extends React.Component {
-
 	constructor(props) {
 		super(props);
 		this.onChangeSource = this.onChangeSource.bind(this);
 	}
 
+	// Uses the onChangeSource function to update the state.currentSource of NewsFeed
 	onChangeSource(e) {
 		this.props.onChangeSource(e.target.value);
 	}
 
+	// Renders a "Source: " label & a select element with the source options
+	// Changing the source option selected will activate the event onChangeSource
+	// Value & text of option elements are both the sourceName
 	render() {
+		// Creating the option elements
 		var sourceNames = this.props.sourceNames;
 		var options = [];
 
 		sourceNames.forEach(function(sourceName) {
+
 			options.push(<option name={sourceName} key={sourceName}>{sourceName}</option>);
+
 		});
 
 		return (
@@ -210,26 +266,33 @@ class SourceFilter extends React.Component {
 			</div>
 		);
 	}
-
 }
 
+// CategoryFilter is used to select the category
 class CategoryFilter extends React.Component {
-
 	constructor(props) {
 		super(props);
 		this.onChangeCategory = this.onChangeCategory.bind(this);
 	}
 
+	// Uses the onChangeCategory function to update the state.currentCategory of NewsFeed
 	onChangeCategory(e) {
 		this.props.onChangeCategory(e.target.value);
 	}
 
+	// Renders a "Category: " label & a select element with the category options
+	// Changing the category option selected will activate the event onChangeCategory
+	// Value & text of option elements are both the categoryName
 	render() {
+		// Creating the option elements
+		var currentSourceName = this.props.currentSourceName;
 		var categoryNames = this.props.categoryNames;
 		var options = [];
-		var currentSourceName = this.props.currentSourceName;
+
 		categoryNames.forEach(function(categoryName) {
+			// Key combines source name & category name to ensure that categories belonging to different sources with the same name can be distinguished from each other
 			options.push(<option name={categoryName} key={currentSourceName + " " + categoryName}>{categoryName}</option>);
+
 		});
 
 		return (
@@ -241,11 +304,12 @@ class CategoryFilter extends React.Component {
 			</div>
 		);
 	}
-
 }
 
+// ArticleList fetches the RSS feed & loads the "Article"s
 class ArticleList extends React.Component {
-
+	// State: articleItems contains an array containing the "item"s from the RSS feed
+	// By default its an empty array
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -254,8 +318,11 @@ class ArticleList extends React.Component {
 
 	}
 
+	// Fetches the RSS feed from the RSS feed url & adds the items to this.state.articleItems
+	// Currently uses https://cors-anywhere.herokuapp.com/ to avoid cors problems, but I need to figure out an alternative
 	fetchDataFromUrl(url) {
 		$.ajax({
+
 			type: "GET",
 			url: "https://cors-anywhere.herokuapp.com/" + url,
 			dataType: "xml" ,
@@ -271,53 +338,71 @@ class ArticleList extends React.Component {
 		});
 	}
 
+	// componentDidMount & componentWillReceiveProps both call fetchDataFromUrl to ensure that the this.state.articleItems is updated with every render
+	// Since fetchDataFromUrl calls an ajax method & this.setState, it may take some time between the initial render before the "article"s are loaded
+	// These methods are used as they are called before the render & allow this.setState to be called
 	componentDidMount() {
 		this.fetchDataFromUrl(this.props.url);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if(this.props !== nextProps) {
+		if(this.props !== nextProps) { // To ensure that the props are updated to avoid excessive fetching
+
 			this.fetchDataFromUrl(nextProps.url);
+
 		}
 	}
 
+	// Renders either an error message if there are no articles found or an array of the "Article"s
+	// Article's attributes: article, currentSourceName (for it to know how to interpret the RSS feed), key
+
+	// Style
+	// If there are articles, they are put in a div with the class .article-list
 	render() {
+		// Creating the article components
 		var articleItems = this.state.articleItems;
 		var articles = [];
 
 		for(let i = 0; i < articleItems.length; i++) {
+
 			var article = articleItems[i];
 			var title = article.children[0].textContent;
 			articles.push(<Article article={article} currentSourceName={this.props.currentSourceName} key={title}/>)
+
 		}
 
-
 		if(articles.length === 0) {
+
 			return (
 				<div>
 					<p>Sorry, no articles found for that category.</p>
 				</div>
 			);
+
 		} else {
+
 			return (
 				<div className="article-list">
 					{articles}
 				</div>
 			);
+
 		}
 	}
-
 }
 
+// Article displays each article item in the RSS feed
 class Article extends React.Component {
-
+	// Renders a title (linked), date & description
 	render() {
 		var article = this.props.article;
 		var title = article.getElementsByTagName("title")[0].textContent;
 		var link = article.getElementsByTagName("link")[0].textContent;
 		var date, description;
 
+		// Handling the different RSS feed formatting
 		switch(this.props.currentSourceName) {
+
 			case "Straits Times":
 				let dateAndDescription = article.getElementsByTagName("description")[0];
 				if(dateAndDescription != null) {
@@ -335,6 +420,7 @@ class Article extends React.Component {
 
 			default:
 				break;
+
 		}
 
 		return (
@@ -347,7 +433,9 @@ class Article extends React.Component {
 			</div>
 		);
 	}
-
 }
+
+
+// ReactDOM render ////////////////////////////////////////////////////////////////////////////////
 
 ReactDOM.render(<NewsFeed sources={sources}/>, document.getElementById('root'));
