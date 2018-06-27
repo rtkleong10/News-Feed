@@ -448,7 +448,7 @@ class Article extends React.Component {
 					text = description.substring(aStartBracketPos + 1, aEndPos);
 				}
 				
-				descriptionArr.push(<a href={link} key={key}>{text}</a>);
+				descriptionArr.push(<a href={link} target="_blank" key={key}>{text}</a>);
 
 				// Trim a tag
 				description = description.substring(aEndPos + 4);
