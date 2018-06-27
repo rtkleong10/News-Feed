@@ -45,6 +45,30 @@ a:hover {
 	padding: 1em;
 }
 
+.loading {
+	
+	height: 200px;
+	display: block;
+	margin: auto;
+	padding-top: 1em;
+}
+
+.loader {
+    border: 16px solid #ffffff;
+    border-top: 16px solid #0099dd;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    animation: spin 2s linear infinite;
+    margin: auto;
+    margin-top: 2em;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* For screens larger than phones */
 /* More spacing on left & right & articles are broken into 2 columns */
 @media(min-width: 586px){

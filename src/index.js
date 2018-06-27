@@ -313,7 +313,8 @@ class ArticleList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			articleItems: []
+			articleItems: [],
+			loading: true
 		};
 
 	}
@@ -328,7 +329,10 @@ class ArticleList extends React.Component {
 			dataType: "xml" ,
 
 			success: function(data) {
-				this.setState({articleItems: data.getElementsByTagName("item")});
+				this.setState({
+					articleItems: data.getElementsByTagName("item"),
+					loading: false
+				});
 			}.bind(this),
 
 			error: function(xhr, status, err) {
@@ -347,7 +351,7 @@ class ArticleList extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 		if(this.props !== nextProps) { // To ensure that the props are updated to avoid excessive fetching
-
+			this.setState({loading: true});
 			this.fetchDataFromUrl(nextProps.url);
 
 		}
@@ -359,6 +363,18 @@ class ArticleList extends React.Component {
 	// Style
 	// If there are articles, they are put in a div with the class .article-list
 	render() {
+
+		// Loading
+		if (this.state.loading) {
+
+			return (
+				<div>
+					<div className="loader"></div>
+				</div>
+			);
+		}
+
+
 		// Creating the article components
 		var articleItems = this.state.articleItems;
 		var articles = [];
@@ -371,7 +387,7 @@ class ArticleList extends React.Component {
 
 		}
 
-		if(articles.length === 0) {
+		if (articles.length === 0) {
 
 			return (
 				<div>
@@ -393,12 +409,74 @@ class ArticleList extends React.Component {
 
 // Article displays each article item in the RSS feed
 class Article extends React.Component {
+
+	// Convert to an array of links & text
+	escapeLinks(description) {
+
+		// <a href=";
+		var aStartPos = description.search("<a"); // Next
+		var descriptionArr = [];
+		var key = 0;
+
+		// Contains links
+		if (aStartPos !== -1) {
+
+			while (aStartPos !== -1) {
+
+				// Add text segment if any
+				var textSeg = description.substring(0, aStartPos);
+				if(aStartPos !== 0) descriptionArr.push(textSeg);
+
+				// Establishing Positions
+				var targetPos = description.search("target");
+				var aEndPos = description.search("</a>");
+
+				// Adding the a tag
+				// e.g. <a href="https://www.straitstimes.com/singapore/health/ip-insurers-losses-raise-possibility-of-premium-hikes" target="_blank">IP insurers' losses raise </a>
+				var link, text;
+
+				if (targetPos !== -1 && targetPos < aEndPos) { // Contains target
+
+					link = description.substring(aStartPos + 9, targetPos - 2);
+					text = description.substring(targetPos + 16, aEndPos);
+
+				} else { // Doesn;t contain target
+
+					var aStartBracketPos = description.search(">");
+
+					link = description.substring(aStartPos + 9, aStartBracketPos - 1);
+					text = description.substring(aStartBracketPos + 1, aEndPos);
+				}
+				
+				descriptionArr.push(<a href={link} key={key}>{text}</a>);
+
+				// Trim a tag
+				description = description.substring(aEndPos + 4);
+
+				// Update counters
+				aStartPos = description.search("<a");
+				key++;
+			}
+
+			// Add text segment if any
+			if(description !== "") descriptionArr.push(description);
+			return descriptionArr;
+
+		// No links
+		} else {
+
+			descriptionArr.push(description);
+			return descriptionArr;
+		}
+
+	}
+
 	// Renders a title (linked), date & description
 	render() {
 		var article = this.props.article;
 		var title = article.getElementsByTagName("title")[0].textContent;
 		var link = article.getElementsByTagName("link")[0].textContent;
-		var date, description;
+		var date, description, descriptionArr;
 
 		// Handling the different RSS feed formatting
 		switch(this.props.currentSourceName) {
@@ -406,15 +484,19 @@ class Article extends React.Component {
 			case "Straits Times":
 				let dateAndDescription = article.getElementsByTagName("description")[0];
 				if(dateAndDescription != null) {
+
 					date = dateAndDescription.textContent.split("<br /><br />")[0];
 					description = dateAndDescription.textContent.split("<br /><br />")[1];
+					descriptionArr = this.escapeLinks(description);
 				}
 				break;
 
 			case "Channel News Asia":
 				date = article.getElementsByTagName("pubDate")[0].textContent;
 				if(article.getElementsByTagName("description")[0] != null) {
+
 					description = article.getElementsByTagName("description")[0].textContent;
+					descriptionArr = this.escapeLinks(description);
 				}
 				break;
 
@@ -429,7 +511,7 @@ class Article extends React.Component {
 					<h2>{title}</h2>
 				</a>
 				<p><small>{date}</small></p>
-				<p>{description}</p>
+				<p>{descriptionArr}</p>
 			</div>
 		);
 	}
