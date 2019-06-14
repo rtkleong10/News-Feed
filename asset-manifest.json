@@ -1,13 +1,14 @@
 {
-  "main.css": "/News-Feed/static/css/main.c687bcd0.chunk.css",
-  "main.js": "/News-Feed/static/js/main.5b90c870.chunk.js",
-  "main.js.map": "/News-Feed/static/js/main.5b90c870.chunk.js.map",
+  "main.css": "/News-Feed/static/css/main.6d9aed4b.chunk.css",
+  "main.js": "/News-Feed/static/js/main.245e414e.chunk.js",
+  "main.js.map": "/News-Feed/static/js/main.245e414e.chunk.js.map",
   "static/js/1.6c10e5d7.chunk.js": "/News-Feed/static/js/1.6c10e5d7.chunk.js",
   "static/js/1.6c10e5d7.chunk.js.map": "/News-Feed/static/js/1.6c10e5d7.chunk.js.map",
   "runtime~main.js": "/News-Feed/static/js/runtime~main.c3b4dae8.js",
   "runtime~main.js.map": "/News-Feed/static/js/runtime~main.c3b4dae8.js.map",
-  "static/css/main.c687bcd0.chunk.css.map": "/News-Feed/static/css/main.c687bcd0.chunk.css.map",
+  "static/media/styles.css": "/News-Feed/static/media/AvenirNextLTPro-Regular.b5ed9330.otf",
+  "static/css/main.6d9aed4b.chunk.css.map": "/News-Feed/static/css/main.6d9aed4b.chunk.css.map",
   "index.html": "/News-Feed/index.html",
-  "precache-manifest.25f091bebb6baa161f7824da1c8dd6f0.js": "/News-Feed/precache-manifest.25f091bebb6baa161f7824da1c8dd6f0.js",
+  "precache-manifest.01a6cbdbd3302f7c4e6db1fe3f079e91.js": "/News-Feed/precache-manifest.01a6cbdbd3302f7c4e6db1fe3f079e91.js",
   "service-worker.js": "/News-Feed/service-worker.js"
 }
