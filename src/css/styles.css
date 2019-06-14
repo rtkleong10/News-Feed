@@ -1,13 +1,37 @@
+:root {
+	--blue: #5C99D1;
+	--light-grey: #DFDFDF;
+	--dark-grey: #444444;
+}
+
+@font-face {
+	font-family: 'Avenir Next';
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+	src: local('Avenir Next'), local('Avenir-Next'),
+		url("../font/avenir-next/AvenirNextLTPro-Regular.otf") format("opentype");
+}
+
+@font-face {
+	font-family: 'Avenir Next';
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+	src: local('Avenir Next Bold'), local('Avenir-Next-Bold'),
+		url("../font/avenir-next/AvenirNextLTPro-Bold.otf") format("opentype");
+}
+
 body {
 	margin: 0;
-	font-family: Avenir;
-	background: #eaeaea;
+	font-family: "Avenir Next", Arial, sans-serif;
+	color: var(--dark-grey);
 }
 
 header {
-	background: #0099dd;
+	background: var(--blue);
 	padding: 20px 0px;
-	color: #fff;
+	color: #FFFFFF;
 	margin-bottom: 10px;
 }
 
@@ -21,14 +45,36 @@ h1 {
 	margin: 0;
 }
 
+.filter-group {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	align-items: center;
+	margin-bottom: 10px;
+	max-width: 400px;
+}
+
+label {
+	font-weight: bold;
+	font-size: 18px;
+}
+
+select {
+	font-family: "Avenir Next", Arial, sans-serif;
+	background-color: white;
+	color: var(--dark-grey);
+	font-size: 16px;
+}
+
 /* For the article titles */
 a {
-	color: #0099dd;
+	color: var(--blue);
 	text-decoration: none;
+	transition: all 0.3s ease-out;
+	font-weight: bold;
 }
 
 a:hover {
-	color: #0077bb;
+	color: var(--dark-grey);
 	text-decoration: none;
 }
 
@@ -46,8 +92,8 @@ a:hover {
 }
 
 .loader {
-    border: 16px solid #ffffff;
-    border-top: 16px solid #0099dd;
+    border: 16px solid var(--light-grey);
+    border-top: 16px solid var(--blue);
     border-radius: 50%;
     width: 150px;
     height: 150px;

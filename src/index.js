@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import './styles.css';
+import './css/styles.css';
 
 // Currently supports The Straits Times & Channel New Asia
 
@@ -258,9 +258,9 @@ class SourceFilter extends React.Component {
 		});
 
 		return (
-			<div>
-				<label>Source: </label>
-				<select name="sourceNames" onChange={this.onChangeSource}>
+			<div className="filter-group">
+				<label htmlFor="sourceNames">Source: </label>
+				<select id="sourceNames" name="sourceNames" onChange={this.onChangeSource}>
 					{options}
 				</select>
 			</div>
@@ -296,9 +296,9 @@ class CategoryFilter extends React.Component {
 		});
 
 		return (
-			<div>
-				<label>Category: </label>
-				<select name="categoryNames" onChange={this.onChangeCategory}>
+			<div className="filter-group">
+				<label htmlFor="categoryNames">Category: </label>
+				<select id="categoryNames" name="categoryNames" onChange={this.onChangeCategory}>
 					{options}
 				</select>
 			</div>
@@ -448,7 +448,7 @@ class Article extends React.Component {
 					text = description.substring(aStartBracketPos + 1, aEndPos);
 				}
 				
-				descriptionArr.push(<a href={link} target="_blank" key={key}>{text}</a>);
+				descriptionArr.push(<a href={link} target="_blank" key={key} rel="noopener noreferrer">{text}</a>);
 
 				// Trim a tag
 				description = description.substring(aEndPos + 4);
@@ -507,7 +507,7 @@ class Article extends React.Component {
 
 		return (
 			<div className="article">
-				<a href={link} target="_blank">
+				<a href={link} target="_blank" rel="noopener noreferrer">
 					<h2>{title}</h2>
 				</a>
 				<p><small>{date}</small></p>
